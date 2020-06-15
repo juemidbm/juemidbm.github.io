@@ -1,0 +1,246 @@
+跳到内容
+搜索或跳至…
+
+拉取要求
+问题
+市场
+探索
+ 
+@juemidbm 
+无需任何代码即可学习Git和GitHub！
+使用Hello World指南，您将开始一个分支，编写注释并打开拉取请求。
+
+
+开-
+/
+wa-automate-nodejs
+28
+56
+436112
+ 码
+ 问题 5
+ 拉取要求 1个 动作
+ 专案 1个
+ 维基
+ 安全 0
+ 见解
+wa-automate-nodejs/演示/ index.ts /
+@smashah smashah 功能：BREAKING sessionId现在可以设置为中间件上的路径。查…
+8e53dcb 18小时前
+200线（168位）  7.6 KB
+  
+代码导航可用！
+轻松浏览代码。单击函数和方法调用以跳转到它们在同一存储库中的定义或引用。 学到更多
+
+// const wa = require（'../ dist / index'）;
+// var create = require（“ @ open-wa / wa-automate”）。create;
+//从“ ../dist/index”导入{创建，客户端，decryptMedia，ev}；
+ 从'../src/index' 导入{  创建， 客户端， 解密媒体， ev ， smartUserAgent  }  ; 
+const  mime  =  require （'mime-types' ）;
+const  fs  =  require （'fs' ）;
+const  uaOverride  =  'WhatsApp / 2.16.352 Mozilla / 5.0（Macintosh; Intel Mac OS X 10_15_1）AppleWebKit / 605.1.15（KHTML，like Gecko）Version / 13.0.3 Safari / 605.1.15' ;
+const  tosBlockGuaranteed  =  “ Mozilla / 5.0（X11; Linux x86_64）AppleWebKit / 537.36（KHTML，如Gecko）HeadlessChrome / 79.0.3945.88 Safari / 537.36” ；
+const  ON_DEATH  =  require （'死亡' ）;
+让 globalClient：客户;
+const  express  =  require （'express' ）
+
+const  app  =  express （）
+应用程式。使用（明确。JSON （））
+
+常量 端口 =  8082 ;
+
+
+ON_DEATH （异步 功能（signal ， err ） {
+  控制台。日志（“杀戮会话” ）；
+  如果（globalClient ）等待 globalClient 。杀死（）;
+} ）
+
+
+ev 。on （'qr。**' ， async  （qrcode ，sessionId ） =>  {
+  // console.log（“ TCL：qrcode”，q​​rcode）
+  // console.log（“ TCL：qrcode，sessioId”，qrcode，sessionId）
+  // base64编码的QR码图片
+  const  imageBuffer  =  缓冲区。从（QRCode的。代替（'数据：图像/ PNG; BASE64，' ，'' ）， '的base64' ）; 
+  fs 。writeFileSync （`qr_code $ { sessionId？'_' + sessionId：'' } .png` ， imageBuffer ）;
+} ）;
+
+ev 。on （'**' ， async  （data ，sessionId ，namespace ） =>  {
+  控制台。日志（“ \ n ----------” ）
+  控制台。日志（'EV' ，data ，sessionId ，名称空间）
+  控制台。日志（“ ----------” ）
+} ）
+
+ev 。on （'sessionData。**' ， async  （sessionData ， sessionId ） => {
+  控制台。日志（“ \ n ----------” ）
+  控制台。日志（'sessionData' ，sessionId ， sessionData ）
+  控制台。日志（“ ----------” ）
+} ）
+
+异步 功能 启动（客户端：客户端） {
+  应用程式。使用（客户。中间件（true ））;
+
+应用程式。听（PORT ， function  （） {
+  控制台。日志（`\ n•正在监听端口$ { PORT }！` ）；
+} ）;
+
+  globalClient = 客户;
+  控制台。日志（``开始'' ）;
+  const  me  =  等待 客户。getMe （）;
+  控制台。日志（“开始->我” ， 我）；
+  // const chats = await client.getAllChatsWithMessages（false）;
+  // console.log（“ TCL：开始->聊天”，聊天）
+  // console.log（“ TCL：getAllChatsWithMessages->”，chats.length，chats [0]）;
+  // console.log（“ TCL：开始->聊天”，chats [0] .msgs）;
+
+  // const newMessages =等待client.getAllUnreadMessages（）;
+  // console.log（“ TCL：开始-> newMessages”，newMessages）
+  // console.log（“ TCL：getAllNewMessages->”，newMessages.length，newMessages [0]）;
+
+  // client.onAck（（（c：any）=> console.log（c.id._serialized，c.body，c.ack）））;
+
+    客户。onAddedToGroup （新闻组 =>  控制台。登录（'加进新的组' ， 新闻组。ID ））;
+
+    客户。onIncomingCall （呼叫=> 控制台。登录（'新呼叫' ，呼叫））;
+
+  // client.onParticipantsChanged（“ XXXXXXXX-YYYYYYYY@g.us”，（participantChangedEvent：any）=> console.log（“参与者已更改为组”，participantChangedEvent））;
+  
+  //返回“已连接”或“超时”或“冲突”（如果用户在其他地方打开whatsapp网站）
+  客户。onStateChanged （state => {
+    控制台。日志（'statechanged' ， 状态）
+    if （state === “ CONFLICT” ） 客户端。forceRefocus （）;
+  } ）;
+
+  // setTimeout（_ => client.kill（），3000）;
+
+  // const allmsgs =等待client.loadAndGetAllMessagesInChat（'XXXXXXXX-YYYYYYYY@g.us“，true，false）;
+  // console.log（“ TCL：开始-> allMessages”，allmsgs.length）;
+
+  客户。onAnyMessage （message => {
+    控制台。日志（消息。类型）
+    如果（消息。体=== “删除” ） 的客户端。DeleteMessage可以（消息。从，消息。ID ，假）
+  } ）;
+  // client.onParticipantsChanged（“ XXXXXXXXXX-YYYYYYYYY@g.us”，x => console.log（x））
+  客户。onMessage （异步 消息 =>  {
+    尝试 {
+    const  isConnected  =  等待 客户端。isConnected （）;
+    控制台。日志（“ TCL：开始-> isConnected” ， isConnected ）
+    控制台。日志（消息。主体， 消息。ID ， 消息？。quotedMsgObj？。ID ）;
+    如果 （消息。mime类型） {
+      const  filename  =  ` $ { 消息。t }。$ { mime 。分机（消息。mime类型）} ` ;
+      const  mediaData  =  等待 deleteMedia （message ， uaOverride ）;
+      //您也可以使用sendImage或await client.sendFile发送文件
+      //等待client.sendImage（
+      // message.from，
+      //`data：$ {message.mimetype}; base64，$ {mediaData.toString（'base64'）}`，
+      // 文件名，
+      //`您刚寄给我这个$ {message.type}`
+      //）;
+      
+      //发送整个数据URI，以便可以检查mimetype。
+      等待 客户。sendImageAsSticker （消息。从， `数据：$ { 消息。mime类型} ; BASE64，$ { mediaData 。的toString （'的base64' ）} ` ）
+      //获取此产品编号
+      // const products =等待client.getBusinessProfilesProducts（message.to）;
+
+      // //将商品从该号码发送到该号码
+      //等待client.sendImageWithProduct（
+      //`data：$ {message.mimetype}; base64，$ {mediaData.toString（'base64'）}`，
+      // message.from，
+      //'检出此产品'，
+      // message.to，
+      //产品[0] .id）
+
+        //等待client.forwardMessages（message.from，message，false）;
+
+        等待 客户。forwardMessages （消息，来自，消息，false ）;
+      fs 。writeFile （文件名， mediaData ， 函数（err ） {
+        如果 （err ） {
+          返回 控制台。log （err ）;
+        }
+        控制台。日志（“文件已保存！” ）；
+      } ）;
+    }  否则 如果 （消息。类型=== “所在地” ） {
+      如果（消息。shareDuration ） 控制台。日志（“此用户已经开始分享他们的生活地点” ， 消息。笔者 ||  消息。从）
+      控制台。日志（“TCL：位置- >信息” ， 消息。LAT ， 消息。LNG ， 消息。LOC ）
+      等待 客户。sendLocation （消息。从， ` $ { 消息。LAT } ` ， ` $ { 消息。LNG } ` ， `特殊照顾处于$ { 消息。LOC } ` ）
+    }  其他 {
+      // var sentMessageId =等待client.sendText（message.from，message.body）;
+      // console.log（“开始-> sentMessageId”，sentMessageId）
+      // //发送giphy gif
+      //等待client.forwardMessages（message.from，message，false）;
+      //等待client.sendGiphy（message.from，'https：//media.giphy.com/media/oYtVHSxngR3lC/giphy.gif'，'哦，我的天哪，行得通'）；
+      // console.log（“ TCL：开始-> message.from，message.body，message.id.toString（）”，message.from，message.body，message.id.toString（））
+      //等待client.reply（message.from，message.body，message）;
+    }
+    }  catch  （error ） {
+    控制台。日志（“ TCL：开始->错误” ， 错误）
+    }
+  } ）;
+
+    // const groupCreationEvent =等待client.createGroup（'coolnewgroup'，'0000000000@c.us'）;
+    // console.log（“开始-> groupCreationEvent”，groupCreationEvent）
+  //等待几秒钟并分组
+
+}
+
+//您现在可以创建两个指向 
+//两个相同的消息处理程序
+
+
+/ **
+ *它可以为null，默认为'session'文件夹。
+ *您还可以覆盖一些操纵up的配置，为chrome实例设置可执行路径以支持ffmpeg（video + GIF）
+ *，您可以并且应该覆盖用户代理。
+ * /
+创建（{
+  sessionId：'session1' ，
+  // executePath：“ / Applications / Google Chrome.app/Contents/MacOS/Google Chrome”，
+  useChrome：true ，
+  restartOnCrash：开始，
+  无头：假，
+  throwErrorOnTosBlock：true ，
+  qrTimeout：40 ，
+  authTimeout：40 ，
+  autoRefresh：true ， //默认为true
+  qrRefreshS：15 ， //请注意，如果此时间太长，则您的qr代码扫描可能最终会无效。通常，二维码每15秒过期一次。
+  // cacheEnabled：false，
+  // devtools：true，
+  //要么
+  // devtools：{
+  //用户：“ admin”，
+  //通过：'root'
+  //}，
+  //示例chrome args。这可能会破坏您的应用程序！
+  // chromiumArgs：[
+  //'--aggressive-cache-discard'，
+  //'--disable-cache'，
+  //'--disable-application-cache'，
+  //'--disable-offline-load-stale-cache'，
+  //'--disk-cache-size = 0'
+  //]
+} ）
+// 创建（）
+。然后（异步 客户端 =>  等待 启动（客户端））
+。抓（e => {
+  控制台。日志（'错误' ，ê 。消息）;
+  // process.exit（）;
+} ）;
+
+//或者您可以设置一个“会话ID”
+// create（'newsession'）。then（client => start（client））;
+
+//不必使用具有相同ID的会话
+
+//警告，将在回音室中设置2个数字
+//如果您发送带有一个电话的图像，它将为您带来永恒的图像
+©2020 GitHub，Inc.
+条款
+隐私
+安全
+状态
+帮帮我
+联系GitHub
+价钱
+API
+训练
+博客
+关于
